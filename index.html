@@ -1,0 +1,49 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: system-ui;
+        }
+
+        input:not([type='submit'], [type='reset']) {
+            width: 150px;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <p><strong>The following text fields only allow AutoFill</strong></p>
+    <form class="data">
+        <label for="imei">Device imei:</label>
+        <input name="device-imei" id="imei"><br>
+        <label for="eid">Device eid:</label>
+        <input name="device-eid" id="eid"><br>
+        <br>
+        <input type="submit">
+        <input type="reset">
+    </form>
+    <script>
+        var IMEI_LENGTH = 15
+        var EID_LENGTH = 32
+
+        function shouldAllowInputEvent(event) {
+            return !event.inputType?.startsWith("insert")
+                || (event.data.length == IMEI_LENGTH || event.data.length == EID_LENGTH && !["insertFromPaste", "insertFromDrop"].includes(event.inputType));
+        }
+
+        for (let textField of [...document.querySelectorAll("#imei, #eid")]) {
+            textField.addEventListener("beforeinput", (event) => {
+                if (!shouldAllowInputEvent(event))
+                    event.preventDefault();
+            });
+            textField.addEventListener("keydown", event => event.preventDefault());
+        }
+    </script>
+</body>
+
+</html>
+              
